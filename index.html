@@ -10,22 +10,22 @@
     <div class="container">
         <div class="header">
             <h1>武器词条匹配查询工具</h1>
-            <p>选择属性后点击确认，系统将自动匹配符合条件的武器（无序匹配）</p>
+            <p>选择属性</p>
         </div>
         
         <div class="result-area">
-            <h2><<i class="fas fa-search"></</i>匹配结果</h2>
+            <h2><i class="fas fa-search"></i>匹配结果</h2>
             <div id="resultList" class="loading-state">
-                <<i class="fas fa-spinner"></</i>
+                <i class="fas fa-spinner"></i>
                 <p>加载武器数据中...</p>
             </div>
         </div>
         
         <div class="selection-area">
-            <h2><<i class="fas fa-sliders-h"></</i>属性选择（可多选）</h2>
+            <h2><i class="fas fa-sliders-h"></i>属性选择（可多选）</h2>
             
             <div class="selection-note">
-                <<i class="fas fa-info-circle"></</i> 选择1条或多条属性，奖励基质的其中1条属性必定为选定属性，剩余1条属性则完全随机出现
+                <i class="fas fa-info-circle"></i> 
             </div>
             
             <!-- 基础属性分类 -->
@@ -98,7 +98,7 @@
         async function loadWeaponData() {
             try {
                 // 替换为你的JSON文件路径
-                const response = await fetch('weapon-data.json');
+                const response = await fetch('Weapon Attributes.json');
                 
                 if (!response.ok) {
                     throw new Error(`HTTP错误！状态码: ${response.status}`);
