@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>武器词条匹配查询工具</title>
+    <link rel="stylesheet" href="css.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>武器词条匹配查询工具</h1>
+            <p>选择属性</p>
+        </div>
+        
+        <div class="result-area">
+            <h2><<i class="fas fa-search"></</i>匹配结果</h2>
+            <div id="resultList" class="loading-state">
+                <<i class="fas fa-spinner"></</i>
+                <p>加载武器数据中...</p>
+            </div>
+        </div>
+        
+        <div class="selection-area">
+            <h2><<i class="fas fa-sliders-h"></</i>属性选择（可多选）</h2>
+            
+            <div class="selection-note">
+                <<i class="fas fa-info-circle"></</i> 请选择您希望匹配的属性，点击确认后系统将显示所有包含所选属性的武器（无序匹配）。
+            </div>
+            
+            <!-- 基础属性分类 -->
+            <div class="prop-category">
+                <div class="category-title">基础属性</div>
+                <div class="props-grid">
+                    <button class="prop-btn" data-prop="意志提升">意志提升</button>
+                    <button class="prop-btn" data-prop="敏捷提升">敏捷提升</button>
+                    <button class="prop-btn" data-prop="力量提升">力量提升</button>
+                    <button class="prop-btn" data-prop="智识提升">智识提升</button>
+                    <button class="prop-btn" data-prop="主能力提升">主能力提升</button>
+                </div>
+            </div>
+            
+            <!-- 附加属性分类 -->
+            <div class="prop-category">
+                <div class="category-title">附加属性</div>
+                <div class="props-grid">
+                    <button class="prop-btn" data-prop="攻击提升">攻击提升</button>
+                    <button class="prop-btn" data-prop="生命提升">生命提升</button>
+                    <button class="prop-btn" data-prop="终结技充能效率提升">终结技充能效率提升</button>
+                    <button class="prop-btn" data-prop="电磁伤害提升">电磁伤害提升</button>
+                    <button class="prop-btn" data-prop="法术提升">法术提升</button>
+                    <button class="prop-btn" data-prop="寒冷伤害提升">寒冷伤害提升</button>
+                    <button class="prop-btn" data-prop="暴击率提升">暴击率提升</button>
+                    <button class="prop-btn" data-prop="治疗效率提升">治疗效率提升</button>
+                    <button class="prop-btn" data-prop="源石技艺强度提升">源石技艺强度提升</button>
+                    <button class="prop-btn" data-prop="物理伤害提升">物理伤害提升</button>
+                    <button class="prop-btn" data-prop="灼热伤害提升">灼热伤害提升</button>
+                    <button class="prop-btn" data-prop="自然伤害提升">自然伤害提升</button>
+                </div>
+            </div>
+            
+            <!-- 技能属性分类 -->
+            <div class="prop-category">
+                <div class="category-title">技能属性</div>
+                <div class="props-grid">
+                    <button class="prop-btn" data-prop="强攻">强攻</button>
+                    <button class="prop-btn" data-prop="粉碎">粉碎</button>
+                    <button class="prop-btn" data-prop="残暴">残暴</button>
+                    <button class="prop-btn" data-prop="医疗">医疗</button>
+                    <button class="prop-btn" data-prop="切骨">切骨</button>
+                    <button class="prop-btn" data-prop="迸发">迸发</button>
+                    <button class="prop-btn" data-prop="夜幕">夜幕</button>
+                    <button class="prop-btn" data-prop="流转">流转</button>
+                </div>
+            </div>
+            
+            <button class="confirm-btn" id="confirmBtn" disabled><<i class="fas fa-check"></</i> 加载中...</button>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let weaponData = {};
+        const selectedProps = new Set();
+        
+        // DOM元素
+        const propButtons = document.querySelectorAll('.prop-btn');
+        const confirmBtn = document.getElementById('confirmBtn');
+        const resultList = document.getElementById('resultList');
+
+        // 加载外部JSON文件
+        async function loadWeaponData() {
+            try {
+                // 替换为你的JSON文件路径
+                const response = await fetch('Weapon Attributes.json');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP错误！状态码: ${response.status}`);
+                }
+                
+                weaponData = await response.json();
+                console.log('武器数据加载成功', weaponData);
+                
+                // 加载成功后更新UI
+                updateUIAfterLoad();
+            } catch (error) {
+                console.error('加载武器数据失败:', error);
+                showErrorState(`数据加载失败: ${error.message}`);
+            }
+        }
+
+        // 加载成功后更新UI
+        function updateUIAfterLoad() {
+            // 启用确认按钮
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = '<<i class="fas fa-check"></</i> 确认查询';
+            
+            // 显示初始提示
+            showEmptyState("请选择属性并点击确认查询");
+            
+            // 绑定属性按钮事件
+            propButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const prop = btn.getAttribute('data-prop');
+                    
+                    if (selectedProps.has(prop)) {
+                        // 取消选择
+                        selectedProps.delete(prop);
+                        btn.classList.remove('active');
+                    } else {
+                        // 选中
+                        selectedProps.add(prop);
+                        btn.classList.add('active');
+                    }
+                });
+            });
+            
+            // 绑定确认按钮事件
+            confirmBtn.addEventListener('click', handleQuery);
+        }
+
+        // 处理查询逻辑
+        function handleQuery() {
+            if (selectedProps.size === 0) {
+                showEmptyState("请至少选择一个属性");
+                return;
+            }
+
+            // 匹配符合条件的武器（无序匹配）
+            const matchedWeapons = [];
+            
+            for (const [weaponName, weaponProps] of Object.entries(weaponData)) {
+                // 检查选中的属性是否都包含在武器属性中（不考虑顺序）
+                const isMatched = Array.from(selectedProps).every(prop => 
+                    weaponProps.includes(prop)
+                );
+                
+                if (isMatched) {
+                    matchedWeapons.push({
+                        name: weaponName,
+                        props: weaponProps
+                    });
+                }
+            }
+
+            // 显示结果
+            renderResults(matchedWeapons);
+        }
+
+        // 渲染结果列表
+        function renderResults(weapons) {
+            if (weapons.length === 0) {
+                showEmptyState("没有找到符合条件的武器");
+                return;
+            }
+
+            resultList.innerHTML = '';
+            
+            weapons.forEach(weapon => {
+                const weaponCard = document.createElement('div');
+                weaponCard.className = 'weapon-card';
+                
+                const weaponName = document.createElement('div');
+                weaponName.className = 'weapon-name';
+                weaponName.textContent = weapon.name;
+                
+                const weaponProps = document.createElement('div');
+                weaponProps.className = 'weapon-props';
+                
+                weapon.props.forEach(prop => {
+                    const propTag = document.createElement('span');
+                    propTag.className = 'prop-tag';
+                    // 高亮显示选中的属性
+                    if (selectedProps.has(prop)) {
+                        propTag.style.backgroundColor = '#4299e1';
+                        propTag.style.color = '#ffffff';
+                    }
+                    propTag.textContent = prop;
+                    weaponProps.appendChild(propTag);
+                });
+                
+                weaponCard.appendChild(weaponName);
+                weaponCard.appendChild(weaponProps);
+                resultList.appendChild(weaponCard);
+            });
+        }
+
+        // 显示空状态
+        function showEmptyState(message) {
+            resultList.innerHTML = `
+                <<i class="fas fa-box-open"></</i>
+                <p>${message}</p>
+            `;
+            resultList.className = 'empty-state';
+        }
+
+        // 显示错误状态
+        function showErrorState(message) {
+            resultList.innerHTML = `
+                <<i class="fas fa-exclamation-triangle"></</i>
+                <p>${message}</p>
+                <p style="margin-top: 10px; font-size: 14px;">请检查JSON文件路径是否正确</p>
+            `;
+            resultList.className = 'empty-state';
+            
+            // 更新确认按钮状态
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '<<i class="fas fa-exclamation"></</i> 加载失败';
+        }
+
+        // 初始化加载数据
+        document.addEventListener('DOMContentLoaded', loadWeaponData);
+    </script>
+</body>
+</html>

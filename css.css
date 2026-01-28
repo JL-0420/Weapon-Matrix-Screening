@@ -1,0 +1,270 @@
+/* 全局样式重置与基础设置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Microsoft YaHei", Arial, sans-serif;
+}
+
+body {
+  background-color: #f5f7fa;
+  color: #333;
+  line-height: 1.6;
+  padding: 20px;
+}
+
+/* 主容器 - 居中限制宽度，适配不同屏幕 */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+}
+
+/* 头部样式 */
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.header h1 {
+  color: #2d3748;
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.header p {
+  color: #718096;
+  font-size: 16px;
+}
+
+/* 结果展示区 */
+.result-area {
+  margin-bottom: 40px;
+  padding: 25px;
+  border-radius: 8px;
+  background: #f8f9fa;
+}
+
+.result-area h2 {
+  color: #2d3748;
+  font-size: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 结果区状态样式（加载/空数据/正常） */
+#resultList {
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.loading-state, .empty-state {
+  color: #718096;
+  font-size: 16px;
+}
+
+.loading-state i {
+  animation: spin 1s linear infinite;
+  font-size: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 武器卡片样式 - 结果展示的每个武器项 */
+.weapon-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+  padding: 15px;
+  margin: 10px;
+  width: calc(33.333% - 20px);
+  min-width: 280px;
+}
+
+.weapon-name {
+  font-weight: bold;
+  font-size: 18px;
+  color: #2d3748;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #eee;
+}
+
+.weapon-props {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.prop-tag {
+  padding: 4px 10px;
+  background: #e2e8f0;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #4a5568;
+}
+
+/* 属性选择区整体样式 */
+.selection-area {
+  margin-top: 40px;
+}
+
+.selection-area h2 {
+  color: #2d3748;
+  font-size: 20px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 选择区提示文字 */
+.selection-note {
+  background: #e6fffa;
+  color: #2c7a7b;
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 核心：属性分类容器 - 分类之间留间距 */
+.prop-category {
+  margin-bottom: 35px;
+}
+
+/* 分类标题样式 - 突出分类，区分不同属性组 */
+.category-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2d3748;
+  margin-bottom: 15px;
+  padding-left: 10px;
+  border-left: 4px solid #4299e1;
+}
+
+/* 核心：词条按钮网格容器 - 实现每行4个横向排列 */
+.props-grid {
+  display: grid;
+  /* 关键属性：每行固定4列，列宽等分，实现每行4个按钮 */
+  grid-template-columns: repeat(4, 1fr);
+  /* 按钮之间的间距（上下+左右），可根据需求调整 */
+  gap: 12px;
+  width: 100%;
+}
+
+/* 词条按钮基础样式 */
+.prop-btn {
+  padding: 12px 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #4a5568;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  /* 禁止按钮文字换行，适配长词条 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+/* 按钮悬浮状态 - 交互反馈 */
+.prop-btn:hover {
+  border-color: #4299e1;
+  background-color: #f7fafc;
+}
+
+/* 按钮选中状态 - 与普通状态区分，突出已选词条 */
+.prop-btn.active {
+  background-color: #4299e1;
+  color: #ffffff;
+  border-color: #4299e1;
+}
+
+/* 禁用状态下的按钮样式 */
+.prop-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background-color: #f5f7fa;
+  border-color: #e2e8f0;
+}
+
+/* 确认查询按钮样式 */
+.confirm-btn {
+  margin-top: 20px;
+  padding: 14px 30px;
+  border: none;
+  border-radius: 8px;
+  background-color: #4299e1;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 确认按钮悬浮状态 */
+.confirm-btn:hover:not(:disabled) {
+  background-color: #3182ce;
+  transform: translateY(-2px);
+}
+
+/* 确认按钮禁用状态 */
+.confirm-btn:disabled {
+  cursor: not-allowed;
+  background-color: #a0cfff;
+  opacity: 0.8;
+  transform: none;
+}
+
+/* 图标统一样式 - 适配Font Awesome */
+i {
+  font-size: 18px;
+  margin-right: 6px;
+}
+
+/* 响应式适配：小屏幕（平板/手机）自动调整列数 */
+@media (max-width: 992px) {
+  .props-grid {
+    grid-template-columns: repeat(3, 1fr); /* 平板：每行3个 */
+  }
+  .weapon-card {
+    width: calc(50% - 20px);
+  }
+}
+
+@media (max-width: 576px) {
+  .props-grid {
+    grid-template-columns: repeat(2, 1fr); /* 手机：每行2个 */
+  }
+  .weapon-card {
+    width: 100%;
+    margin: 10px 0;
+  }
+  .container {
+    padding: 20px;
+  }
+}
