@@ -10,7 +10,7 @@
     <div class="container">
         <div class="header">
             <h1>武器词条匹配查询工具</h1>
-            <p>选择属性</p>
+            <p>选择属性后点击确认，系统将自动匹配符合条件的武器（无序匹配）</p>
         </div>
         
         <div class="result-area">
@@ -25,7 +25,7 @@
             <h2><<i class="fas fa-sliders-h"></</i>属性选择（可多选）</h2>
             
             <div class="selection-note">
-                <<i class="fas fa-info-circle"></</i> 请选择您希望匹配的属性，点击确认后系统将显示所有包含所选属性的武器（无序匹配）。
+                <<i class="fas fa-info-circle"></</i> 选择1条或多条属性，奖励基质的其中1条属性必定为选定属性，剩余1条属性则完全随机出现
             </div>
             
             <!-- 基础属性分类 -->
@@ -66,11 +66,17 @@
                     <button class="prop-btn" data-prop="强攻">强攻</button>
                     <button class="prop-btn" data-prop="粉碎">粉碎</button>
                     <button class="prop-btn" data-prop="残暴">残暴</button>
+                    <button class="prop-btn" data-prop="夜幕">夜幕</button>
                     <button class="prop-btn" data-prop="医疗">医疗</button>
                     <button class="prop-btn" data-prop="切骨">切骨</button>
                     <button class="prop-btn" data-prop="迸发">迸发</button>
-                    <button class="prop-btn" data-prop="夜幕">夜幕</button>
                     <button class="prop-btn" data-prop="流转">流转</button>
+                    <button class="prop-btn" data-prop="压制">压制</button>
+                    <button class="prop-btn" data-prop="追袭">追袭</button>
+                    <button class="prop-btn" data-prop="附术">附术</button>
+                    <button class="prop-btn" data-prop="效益">效益</button>
+                    <button class="prop-btn" data-prop="昂扬">昂扬</button>
+                    <button class="prop-btn" data-prop="巧技">巧技</button>
                 </div>
             </div>
             
@@ -92,7 +98,7 @@
         async function loadWeaponData() {
             try {
                 // 替换为你的JSON文件路径
-                const response = await fetch('Weapon Attributes.json');
+                const response = await fetch('weapon-data.json');
                 
                 if (!response.ok) {
                     throw new Error(`HTTP错误！状态码: ${response.status}`);
